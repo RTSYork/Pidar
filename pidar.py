@@ -43,18 +43,18 @@ def sigintHandler(signal, frame):
 signal.signal(signal.SIGINT, sigintHandler)
 
 
-# piglows1 = []
-# piglows = []
-# for i in range(1, 17):
-# 	ip = '192.168.50.' + str(i)
-# 	print 'Connecting to', ip
-# 	conn = rpyc.connect(ip, 18861)
-# 	piglows1.append(conn)
-# 	piglows.append(conn.root)
+piglows1 = []
+piglows = []
+for i in range(1, 17):
+	ip = '192.168.50.' + str(i)
+	print 'Connecting to', ip
+	conn = rpyc.connect(ip, 18861)
+	piglows1.append(conn)
+	piglows.append(conn.root)
 
-# for piglow in piglows:
-# 	piglow.init()
-# 	piglow.all_off()
+for piglow in piglows:
+	piglow.init()
+	piglow.all_off()
 
 
 print clearString
@@ -115,7 +115,7 @@ while True:
 								if (dist < whiteThresh):
 									white = min(255, (whiteThresh - dist) / 2)
 
-		# piglows[15-i].colours(red, orange, yellow, green, blue, white)
+		piglows[15-i].colours(red, orange, yellow, green, blue, white)
 
 		for i in range(0, len(distances2)):
 			base = (thresh - 100) + (i * 100)
