@@ -74,7 +74,7 @@ for i in range(0, numberSamples):
 while True:
 	distances = []
 	distances2 = []
-	for _ in range(0, 20):
+	for _ in range(0, 23):
 		distances2.append([])
 
 	response = lid.acquire(first, last)
@@ -127,7 +127,7 @@ while True:
 		piglows[15-i].colours(red, orange, yellow, green, blue, white)
 
 		for i in range(0, len(distances2)):
-			base = (thresh - 100) + (i * 100)
+			base = (thresh - 500) + (i * 100)
 			if (dist > base) and (dist <= base + 100):
 				distances2[i].append('####')
 			else:
