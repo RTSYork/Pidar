@@ -8,4 +8,4 @@ for i in range(1, 17):
 	conn = rpyc.connect(ip, 18861)
 	piglow = conn.root
 	piglow.init()
-	piglow.all(0)
+	piglow.all_off()

@@ -89,7 +89,7 @@ for pos in range(0, numberSamples):
 
 # for piglow in piglows:
 # 	piglow.init()
-# 	piglow.all(0)
+# 	piglow.all_off()
 
 print clearString
 
