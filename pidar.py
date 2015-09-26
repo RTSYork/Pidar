@@ -120,9 +120,9 @@ while True:
 						if (dist < greenThresh):
 							green = min(255, (greenThresh - dist))
 							if (dist < blueThresh):
-								blue = min(255, (blueThresh - dist) / 2)
+								blue = min(170, (blueThresh - dist) / 3)
 								if (dist < whiteThresh):
-									white = min(255, (whiteThresh - dist) / 2)
+									white = min(127, (whiteThresh - dist) / 4)
 
 		piglows[15-i].colours(red, orange, yellow, green, blue, white)
 
