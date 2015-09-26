@@ -3,10 +3,10 @@
 
 import sys
 import signal
-import serial
 import math
 from time import sleep
 import rpyc
+from lidar import Lidar
 
 
 numberSamples = 16
@@ -28,45 +28,18 @@ detString    = '║ {} │ {} │ {} │ {} │ {} │ {} │ {} │ {} │ {} �
 bottomString = '╚══════╧══════╧══════╧══════╧══════╧══════╧══════╧══════╧══════╧══════╧══════╧══════╧══════╧══════╧══════╧══════╝'
 
 
-def decode2(encoded):
-	byte1 = ord(encoded[0]) - 0x30
-	byte2 = ord(encoded[1]) - 0x30
-	return (byte1 << 6) + byte2
-
-def decode3(encoded):
-	byte1 = ord(encoded[0]) - 0x30
-	byte2 = ord(encoded[1]) - 0x30
-	byte3 = ord(encoded[2]) - 0x30
-	return (byte1 << 12) + (byte2 << 6) + byte3
-
-def laserOn():
-	ser.write("BM\n")
-	return ser.read(8)
-
-def laserOff():
-	ser.write("QT\n")
-	return ser.read(8)
-
-def acquire(step):
-	ser.write('GD{:0>4}{:0>4}00\n'.format(step, step))
-	return ser.read(29)
-
-def acquireAll(first, last, cluster):
-	ser.write('GS{:0>4}{:0>4}{:0>2}\n'.format(first, last, cluster))
-	return ser.read(58)
-
-def sigintHandler(signal, frame):
-	print 'Exiting...'
-	laserOff()
-	print 'Lidar laser is OFF!'
-	ser.close()
-	print 'Closed serial port ' + ser.name
+if len(sys.argv) != 2:
+	print 'Usage: pidar.py serialDevice'
 	sys.exit(0)
 
 
-if len(sys.argv) != 2:
-	print 'Usage: lidar.py serialDevice'
-	exit()
+def sigintHandler(signal, frame):
+	print 'Exiting...'
+	lid.laserOff()
+	print 'Lidar laser is OFF!'
+	lid.close()
+	print 'Closed serial port ' + ser.name
+	sys.exit(0)
 
 signal.signal(signal.SIGINT, sigintHandler)
 
@@ -91,16 +64,17 @@ for pos in range(0, numberSamples):
 # 	piglow.init()
 # 	piglow.all_off()
 
+
 print clearString
 
-serialDevice = sys.argv[1]
-ser = serial.Serial(serialDevice, 115200, timeout=5)
-ser.flushInput()
-ser.flushOutput()
-print 'Opened serial port ' + ser.name
 
-laserOn()
+serialDevice = sys.argv[1]
+lid = Lidar(serialDevice)
+print 'Opened Lidar on serial port', serialDevice
+
+lid.laserOn()
 print 'Lidar laser is ON!'
+
 
 while True:
 	distances = []
@@ -108,10 +82,10 @@ while True:
 	for _ in range(0, 20):
 		distances2.append([])
 
-	response = acquireAll(start, end, resolution)
+	response = lid.acquireAll(start, end, resolution)
 	for i in range(0, numberSamples):
 		s = 23 + (i * 2)
-		value = decode2(response[s:s+2])
+		value = Lidar.decode2(response[s:s+2])
 		distances.append(value)
 
 	for i in range(0, numberSamples):
@@ -165,10 +139,3 @@ while True:
 	print bottomString
 
 	#sleep(2)
-
-
-laserOff()
-print 'Lidar laser is OFF!'
-
-ser.close()
-print 'Closed serial port ' + ser.name
