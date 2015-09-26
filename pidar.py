@@ -10,12 +10,11 @@ from lidar import Lidar
 
 
 numberSamples = 16
-resolution = 26
-# centre = 384
-centre = 400
-
-# thresholds = [2000, 1800, 1600, 1400, 1300, 1100, 900, 800, 1000, 1300, 1500, 1700, 1900, 1900, 1900, 1900]
-thresholds = [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30]
+first = 230
+last = 640
+positions  = [ 234,  240,  249,  265,  285,  324,  370,  405,  429,  452,  496,  505,  548,  581,  614,  623]
+thresholds = [1802, 1687, 1521, 1240, 1030,  836,  775,  812,  965, 1106, 1433, 1565, 2114, 2043, 2043, 2145]
+# thresholds = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
 
 
 clearString  = '\x1b[2J\x1b[H'
@@ -38,17 +37,10 @@ def sigintHandler(signal, frame):
 	lid.laserOff()
 	print 'Lidar laser is OFF!'
 	lid.close()
-	print 'Closed serial port ' + ser.name
+	print 'Closed serial port ' + serialDevice
 	sys.exit(0)
 
 signal.signal(signal.SIGINT, sigintHandler)
-
-
-positions = []
-start = centre - ((numberSamples - 1) * (resolution / 2))
-end = start + (resolution * (numberSamples - 1))
-for pos in range(0, numberSamples):
-	positions.append(start + (resolution * pos))
 
 
 # piglows1 = []
@@ -75,6 +67,9 @@ print 'Opened Lidar on serial port', serialDevice
 lid.laserOn()
 print 'Lidar laser is ON!'
 
+oldDistances = []
+for i in range(0, numberSamples):
+	oldDistances.append(0)
 
 while True:
 	distances = []
@@ -82,21 +77,22 @@ while True:
 	for _ in range(0, 20):
 		distances2.append([])
 
-	response = lid.acquireAll(start, end, resolution)
-	for i in range(0, numberSamples):
-		s = 23 + (i * 2)
-		value = Lidar.decode2(response[s:s+2])
-		distances.append(value)
+	response = lid.acquire(first, last)
 
 	for i in range(0, numberSamples):
-		dist = distances[i]
+		pos = positions[i]
+		s = (pos - first) * 2
+		value = Lidar.decode2(response[s:s+2])
+		dist = (value + oldDistances[i]) / 2
+		distances.append(dist)
+
 		thresh = thresholds[i]
-		redThresh = thresh + 1408
-		orangeThresh = thresh + 1280
-		yellowThresh = thresh + 1024
-		greenThresh = thresh + 768
-		blueThresh = thresh + 512
-		whiteThresh = thresh + 256
+		redThresh = thresh + 1920
+		orangeThresh = thresh + 1792
+		yellowThresh = thresh + 1536
+		greenThresh = thresh + 1280
+		blueThresh = thresh + 1024
+		whiteThresh = thresh + 512
 
 		red = 127
 		orange = 0
@@ -105,7 +101,7 @@ while True:
 		blue = 0
 		white = 0
 
-		if (dist > 100):
+		if (dist > 300):
 			if (dist < redThresh):
 				red = min(255, (redThresh - dist) + 127)
 				if (dist < orangeThresh):
@@ -115,14 +111,14 @@ while True:
 						if (dist < greenThresh):
 							green = min(255, (greenThresh - dist))
 							if (dist < blueThresh):
-								blue = min(255, (blueThresh - dist))
+								blue = min(255, (blueThresh - dist) / 2)
 								if (dist < whiteThresh):
-									white = min(255, (whiteThresh - dist))
+									white = min(255, (whiteThresh - dist) / 2)
 
 		# piglows[15-i].colours(red, orange, yellow, green, blue, white)
 
 		for i in range(0, len(distances2)):
-			base = thresh + (i * 100) - 30
+			base = (thresh - 100) + (i * 100)
 			if (dist > base) and (dist <= base + 100):
 				distances2[i].append('####')
 			else:
@@ -138,4 +134,5 @@ while True:
 		print detString.format(*val)
 	print bottomString
 
-	#sleep(2)
+	oldDistances = distances
+	
