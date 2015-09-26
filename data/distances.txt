@@ -1,0 +1,16 @@
+16 - Scan 036 - Row 197 - Point 234 - Dist 1802
+15 - Scan 047 - Row 203 - Point 240 - Dist 1687
+14 - Scan 060 - Row 212 - Point 249 - Dist 1521
+13 - Scan 068 - Row 228 - Point 265 - Dist 1240
+12 - Scan 078 - Row 248 - Point 285 - Dist 1030
+11 - Scan 087 - Row 287 - Point 324 - Dist 0836
+10 - Scan 100 - Row 333 - Point 370 - Dist 0775
+09 - Scan 109 - Row 368 - Point 405 - Dist 0812
+08 - Scan 118 - Row 392 - Point 429 - Dist 0965
+07 - Scan 126 - Row 415 - Point 452 - Dist 1106
+06 - Scan 137 - Row 459 - Point 496 - Dist 1433
+05 - Scan 146 - Row 468 - Point 505 - Dist 1565
+04 - Scan 159 - Row 511 - Point 548 - Dist 2114
+03 - Scan 168 - Row 544 - Point 581 - Dist 2043
+02 - Scan 179 - Row 577 - Point 614 - Dist 2043
+01 - Scan 191 - Row 586 - Point 623 - Dist 2145
