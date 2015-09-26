@@ -69,7 +69,7 @@ print 'Lidar laser is ON!'
 
 oldDistances = []
 for i in range(0, numberSamples):
-	oldDistances.append(0)
+	oldDistances.append(4095)
 
 while True:
 	distances = []
@@ -82,7 +82,16 @@ while True:
 	for i in range(0, numberSamples):
 		pos = positions[i]
 		s = (pos - first) * 2
-		value = Lidar.decode2(response[s:s+2])
+		val1 = Lidar.decode2(response[s:s+2])
+		if val1 < 300:
+			val1 = 4095
+		val2 = Lidar.decode2(response[s+2:s+4])
+		if val2 < 300:
+			val2 = 4095
+		val3 = Lidar.decode2(response[s+4:s+6])
+		if val3 < 300:
+			val3 = 4095
+		value = (val1 + val2 + val3) / 3
 		dist = (value + oldDistances[i]) / 2
 		distances.append(dist)
 
