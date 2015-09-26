@@ -14,8 +14,8 @@ resolution = 26
 # centre = 384
 centre = 400
 
-thresholds = [2000, 1800, 1600, 1400, 1300, 1100, 900, 800, 1000, 1300, 1500, 1700, 1900, 1900, 1900, 1900]
-# thresholds = [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30]
+# thresholds = [2000, 1800, 1600, 1400, 1300, 1100, 900, 800, 1000, 1300, 1500, 1700, 1900, 1900, 1900, 1900]
+thresholds = [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30]
 
 
 clearString  = '\x1b[2J\x1b[H'
@@ -145,7 +145,7 @@ while True:
 								if (dist < whiteThresh):
 									white = min(255, (whiteThresh - dist))
 
-		piglows[15-i].colours(red, orange, yellow, green, blue, white)
+		# piglows[15-i].colours(red, orange, yellow, green, blue, white)
 
 		for i in range(0, len(distances2)):
 			base = thresh + (i * 100) - 30
